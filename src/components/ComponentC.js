@@ -1,21 +1,27 @@
-import React from 'react'
-import { NameContext } from '../App'
-import { ColorContext } from '../App'
+import React, { useContext } from 'react'
+import { Button, ButtonGroup, Badge } from 'reactstrap';
+import { CounterContext } from '../App';
+import 'bootstrap/dist/css/bootstrap.min.css';
 const ComponentC = () => {
+    const countercontext = useContext(CounterContext)
+    console.log(countercontext)
+    const { counter, dispatch } = countercontext
     return (
         <div>
-            <div>ComponentC</div>
-            <NameContext.Consumer>
-                {name => {
-                    return (
-                        <ColorContext.Consumer>
-                            {color => (
-                                <div>name: {name}, color {color}</div>
-                            )}
-                        </ColorContext.Consumer>
-                    )
-                }}
-            </NameContext.Consumer>
+            <ButtonGroup>
+                <Button color="primary" outline>
+                    ComponentC Counter <Badge color="secondary">{counter}</Badge>
+                </Button>
+
+            </ButtonGroup>
+            <p></p>
+            <ButtonGroup>
+                <Button color="dark" onClick={() => dispatch({ type: 'increment', payload: 1 })}>increment</Button>
+                <Button color="dark" onClick={() => dispatch({ type: 'decrement', payload: 1 })}>decrement</Button>
+                <Button color="danger" onClick={() => dispatch({ type: 'reset' })}>reset</Button>
+
+            </ButtonGroup>
+
 
         </div>
     )

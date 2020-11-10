@@ -1,17 +1,34 @@
-import React from 'react';
-import './App.css';
+import React, { useReducer } from 'react';
 import ComponentA from './components/ComponentA'
-export const NameContext = React.createContext()
-export const ColorContext = React.createContext()
+import './App.css';
+export const CounterContext = React.createContext()
+const initialState = {
+  counter: 0
+}
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'increment':
+      return { ...state, counter: state.counter + action.payload }
+    case 'decrement':
+      return { ...state, counter: state.counter - action.payload }
+
+    case 'reset':
+
+      return initialState
+
+    default:
+      return state;
+  }
+}
 function App() {
+  const [state, dispatch] = useReducer(reducer, initialState)
   return (
-    <div className="App">
-      <NameContext.Provider value={'Smith'}>
-        <ColorContext.Provider value={'red'}>
-          <ComponentA />
-        </ColorContext.Provider>
-      </NameContext.Provider>
-    </div>
+    <CounterContext.Provider value={{ counter: state.counter, dispatch }}>
+      <div className="App">
+        App js counter {state.counter}
+        <ComponentA />
+      </div>
+    </CounterContext.Provider>
   );
 }
 

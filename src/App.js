@@ -1,68 +1,96 @@
-import { useState } from 'react';
-import Card from './Card';
+import React, { useState } from 'react';
 import './App.css';
+import Card from './Card';
+import styled, { ThemeProvider, css } from 'styled-components'
 
+const theme = {
+  primary: '#4CAF50',
+  mango: 'yellow'
+}
+const Button = styled.button`
+  border: none;
+  ${props =>
+    props.color && css`
+  background-color: ${props => props.length > 2 ? '#4CAF50' : props.length < 2 ? 'red' : 'pink'};
+  color: ${props => props.length <= 1 ? 'black' : 'white'};
+  `
+  }
+  font-weight:${props => props.length <= 1 ? 'bold' : 'normal'};
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+`
 function App() {
-    const [cards, setCards] = useState([
-        {
-            id: '123asd',
-            avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/skkirilov/128.jpg',
-            name: 'John Doe',
-            title: 'Back End Developer'
-        },
-        {
-            id: '123dsa',
-            avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/skkirilov/128.jpg',
-            name: 'Richard Roe',
-            title: 'International Creative Administrator'
-        },
-        {
-            id: '123sda',
-            avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/skkirilov/128.jpg',
-            name: 'Jane Doe',
-            title: 'Front End Developer'
-        }
-    ])
-    const [showCard, setShowCard] = useState(true)
-    const toggleShowCard = () => setShowCard(!showCard)
-
-    const onDelete = (cardIndex) => {
-        const cardCopy = [...cards]
-        cardCopy.splice(cardIndex, 1)
-        setCards(cardCopy)
+  const [cards, setCards] = useState([
+    {
+      id: 'asdfsafsdf',
+      name: 'Damaris Schuster',
+      title: 'International Operations Producer',
+      avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/karthipanraj/128.jpg'
+    },
+    {
+      id: 'gfhdfhg',
+      name: 'Bartholome Dietrich',
+      title: 'Future Security Developer',
+      avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/cicerobr/128.jpg'
+    },
+    {
+      id: 'tbdfghfghf',
+      name: 'Pattie Miller',
+      title: 'Forward Metrics AnalystChange Name',
+      avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/illyzoren/128.jpg'
     }
+  ])
+  const [showCard, setShowCard] = useState(true)
+  const toggleShowCard = () => setShowCard(!showCard)
+  const deleteCardHandler = (cardIndex) => {
+    const cards_copy = [...cards]
+    cards_copy.splice(cardIndex, 1)
+    console.log('cards_copy', cards_copy)
+    console.log('cards', cards)
+    setCards(cards_copy)
 
-    const onChangeNameHandler = (e, id) => {
-        // 1. witch the card by id
-        const cardIndex = cards.findIndex(card=>card.id === id);
-        // 2. make a copy of the cards
-        const cardCopy = [...cards];
-        // 3. change the name of the spesific cards
-        cardCopy[cardIndex].name = e.target.value;
-        // 4. set the cards
-        setCards(cardCopy);
-    }
+  }
+  const changeNameHandler = (event, id) => {
+    //1. which card
+    const cardIndex = cards.findIndex(card => card.id === id)
+    //2. make a copy of the cards
+    const cards_copy = [...cards]
+    //3. change the name of the specific card
+    cards_copy[cardIndex].name = event.target.value
+    //4. set the cards with the latest version of card copy
+    setCards(cards_copy)
+  }
+  // const buttonStyle = {
+  //   backgroundColor: null
+  // }
+  const classes = ['button']
+  if (cards.length < 3) classes.push('pink')
+  if (cards.length < 2) classes.push('red text');
+  const cardsMarkup = showCard && (
+    cards.map((card, index) => <Card
+      avatar={card.avatar}
+      name={card.name}
+      title={card.title}
+      key={card.id}
+      onDelete={() => deleteCardHandler(index)}
+      onChangeName={(event) => changeNameHandler(event, card.id)}
+    />)
+  )
 
-    const cardsMarkup = showCard && (
-        cards.map((card, index) => {
-            return (
-                <Card
-                    key={card.id}
-                    avatar={card.avatar}
-                    name={card.name}
-                    title={card.title}
-                    onDelete={()=>onDelete(index)}
-                    onChange={ (e)=>onChangeNameHandler(e, card.id) }
-                />
-            )
-        })
-    )
-    return (
-        <div className="App">
-            <button className="button button-blue" onClick={toggleShowCard}>Toggle show/hide</button>
-            {cardsMarkup}
-        </div>
-    );
+  return (
+    <ThemeProvider theme={theme}>
+      <div className="App">
+        <Button color="mango" length={cards.length}>Toggle</Button>
+        <button className={classes.join(' ')} onClick={toggleShowCard}>Toggle show/hide</button>
+        {cardsMarkup}
+      </div>
+    </ThemeProvider>
+  );
 }
 
 export default App;

@@ -3,29 +3,48 @@ import Card from './Card';
 import './App.css';
 
 function App() {
-    const [name, setName] = useState('Alan Smith')
+    const [cards, setCards] = useState([
+        {
+            avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/skkirilov/128.jpg',
+            name: 'John Doe',
+            title: 'Back End Developer'
+        },
+        {
+            avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/skkirilov/128.jpg',
+            name: 'Richard Roe',
+            title: 'International Creative Administrator'
+        },
+        {
+            avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/skkirilov/128.jpg',
+            name: 'Jane Doe',
+            title: 'Front End Developer'
+        }
+    ])
     const [showCard, setShowCard] = useState(true)
-    const changeNameHandler = name => setName(name)
-    const changeInputHandler = event => setName(event.target.value)
     const toggleShowCard = () => setShowCard(!showCard)
-    const buttonsMarkup = (
-        <div>
-            <button className="button button2">YES</button>
-            <button className="button button3">NO</button>
-        </div>
-    )
 
-    const cardsMarkup = showCard && <Card
-        avatar='https://s3.amazonaws.com/uifaces/faces/twitter/skkirilov/128.jpg'
-        name={name}
-        title='International Creative Administrator'
-        onChangeName={() => changeNameHandler('Michael Chan')}
-        onChangeInput={changeInputHandler}
-    >{buttonsMarkup}
-    </Card>
+    const onDelete = (cardIndex) => {
+        const card_copy = [...cards]
+        card_copy.splice(cardIndex, 1)
+        setCards(card_copy)
+    }
+
+    const cardsMarkup = showCard && (
+        cards.map((card, index) => {
+            return (
+                <Card
+                    key={index}
+                    avatar={card.avatar}
+                    name={card.name}
+                    title={card.title}
+                    onDelete={()=>onDelete(index)}
+                />
+            )
+        })
+    )
     return (
         <div className="App">
-            <button className="button" onClick={toggleShowCard}>Toggle show/hide</button>
+            <button className="button button-blue" onClick={toggleShowCard}>Toggle show/hide</button>
             {cardsMarkup}
         </div>
     );

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios'
 import './App.css';
 import Card from './Card';
 import { ThemeProvider } from 'styled-components'
@@ -10,27 +11,16 @@ const theme = {
 
 function App() {
 
-  const [cards, setCards] = useState([
-    {
-      id: 'asdfsafsdf',
-      name: 'Damaris Schuster',
-      title: 'International Operations Producer',
-      avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/karthipanraj/128.jpg'
-    },
-    {
-      id: 'gfhdfhg',
-      name: 'Bartholome Dietrich',
-      title: 'Future Security Developer',
-      avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/cicerobr/128.jpg'
-    },
-    {
-      id: 'tbdfghfghf',
-      name: 'Pattie Miller',
-      title: 'Forward Metrics AnalystChange Name',
-      avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/illyzoren/128.jpg'
-    }
-  ])
+  const [cards, setCards] = useState([])
   const [showCard, setShowCard] = useState(true)
+
+  useEffect(() => {
+      axios.get('https://jsonplaceholder.typicode.com/users')
+      .then(res=>{
+          console.log('cek data',res.data);
+          setCards(res.data)
+      })
+  }, []);
 
   const toggleShowCard = () => setShowCard(!showCard)
   const deleteCardHandler = (cardIndex) => {
@@ -59,9 +49,8 @@ function App() {
   if (cards.length < 2) classes.push('red text');
   const cardsMarkup = showCard && (
     cards.map((card, index) => <Card
-      avatar={card.avatar}
       name={card.name}
-      title={card.title}
+      phone={card.phone}
       key={card.id}
       onDelete={() => deleteCardHandler(index)}
       onChangeName={(event) => changeNameHandler(event, card.id)}
